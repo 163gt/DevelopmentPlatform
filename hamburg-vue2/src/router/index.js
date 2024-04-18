@@ -7,12 +7,17 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import('../views/HomePage.vue')
+    component: () => import('../views/GraphX6/HomePage.vue')
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('../views/LoginPage.vue')
+    component: () => import('../views/GraphX6/LoginPage.vue')
+  },
+  {
+    path: '/WebRTC',
+    name: 'WebRTC',
+    component: () => import('../views/WebRTC/WebRTC.vue')
   }
 ]
 

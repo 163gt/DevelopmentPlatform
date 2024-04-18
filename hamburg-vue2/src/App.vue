@@ -6,12 +6,11 @@
 
 <style>
 html,body {
-    height: 100vh;
+    height: 100%;
     width: 100%;
     padding:0;
     margin:0;
-    /* background-color: rgb(0, 6, 89); */
-    /* color: #75deef; */
+
 }
 
 </style>

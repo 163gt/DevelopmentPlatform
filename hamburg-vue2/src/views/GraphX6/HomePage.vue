@@ -135,4 +135,4 @@ export default {
     background-color: #fff;
   }
 }
-</style>
+</style>./GraphX6/tools/createStencilTool
