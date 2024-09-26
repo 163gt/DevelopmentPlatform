@@ -17,7 +17,7 @@
 <script>
 import { ref } from "vue";
 import lottieVue from "../components/lottie.vue";
-import Animationdata from "../assets/Animation - 1727075231106.json?url";
+import Animationdata from "../assets/lottie/Animation - 1727075231106.json?url";
 
 export default {
   components: {
