@@ -6,7 +6,7 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import shiba from "../assets/three3DModel/shiba/scene.gltf?url";
+import shiba from "@/assets/shiba.glb?url";
 
 export default {
   name: "ThreeJSComponent",
@@ -41,7 +41,7 @@ export default {
         function (gltf) {
           model = gltf.scene;
           // 设置模型的位置
-          model.position.set(0, 0, -5); // 你可以根据需要调整 x, y, z 坐标
+          model.position.set(0, 0, -3); // 你可以根据需要调整 x, y, z 坐标
           // 将模型添加到场景中
           scene.add(model);
           console.log('Model loaded:', model); // 调试输出
