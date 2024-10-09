@@ -17,7 +17,7 @@ export default {
     const init = () => {
       // 创建场景
       scene = new THREE.Scene();
-      scene.background = new THREE.Color("#fff");
+      scene.background = new THREE.Color("black");
 
       // 创建相机
       camera = new THREE.PerspectiveCamera(
