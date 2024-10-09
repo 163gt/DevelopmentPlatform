@@ -1,4 +1,4 @@
-import { Controller, Dependencies, Get } from '@nestjs/common';
+import { Controller, Dependencies, Get,Post,Bind,Query,Body } from '@nestjs/common';
 import { LoginService } from './login.service';
 
 @Controller()
@@ -8,8 +8,17 @@ export class LoginController {
     this.LoginService = LoginService;
   }
 
-  @Get('login')
-  getHello() {
+  @Get('logins')
+  @Bind(Query())
+  getHello(Query) {
+    console.log(Query,'8888');
     return this.LoginService.getHello();
+  }
+
+  @Post('add')
+  @Bind(Body())
+  PostLogin(Body){
+    console.log(Body, '9999');
+    return {user:'adad'}
   }
 }
