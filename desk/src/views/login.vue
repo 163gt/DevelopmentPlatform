@@ -174,13 +174,13 @@ export default {
   box-sizing: border-box;
 }
 
-body {
+/* body {
   padding: 0;
   margin: 0;
   font-family: sans-serif;
   background-color: #024f32;
   color: white;
-}
+} */
 
 .monkey {
   position: absolute;

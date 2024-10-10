@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "aframe": "^1.6.0",
     "desk": "file:",
     "lottie-web": "^5.12.2",
     "pinia": "^2.1.7",
