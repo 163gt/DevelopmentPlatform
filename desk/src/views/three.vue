@@ -1,0 +1,256 @@
+<template>
+  <div class="ThreeScene">
+    <div class="coordinate">
+      {{ currentX }}
+      {{ currentY }}
+      {{ currentZ }}
+    </div>
+    <div ref="canvasContainer" class="canvas-container"></div>
+    <div class="direction-controls">
+      <button class="direction-button up" @click="moveCamera('up')"><</button>
+      <button class="direction-button left" @click="moveCamera('left')">
+        <
+      </button>
+      <button class="direction-button right" @click="moveCamera('right')">
+        >
+      </button>
+      <button class="direction-button down" @click="moveCamera('down')">
+        v
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { ref, onMounted, onBeforeUnmount } from "vue";
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import addThreeGLTFLoader from "../utils/createThreeGLTF";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import shiba from "@/assets/shiba.glb?url";
+
+export default {
+  name: "ThreeJSComponent",
+  setup() {
+    const canvasContainer = ref(null);
+    const currentX = ref(0);
+    const currentY = ref(5);
+    const currentZ = ref(0);
+    let scene, camera, renderer, shibamodel, controls;
+    const init = () => {
+      // 创建渲染器
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      canvasContainer.value.appendChild(renderer.domElement);
+      // 创建场景
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color("black");
+      // 创建相机
+      camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      // 添加模型
+        const loader = new GLTFLoader();
+        addThreeGLTFLoader(loader, shiba, scene, [0, 1, 0], (model) => {
+          shibamodel = model;
+        });
+      // 创建地板
+      const floorGeometry = new THREE.PlaneGeometry(20, 20);
+      const floorMaterial = new THREE.MeshStandardMaterial({
+        color: 0x808080,
+        side: THREE.DoubleSide,
+      });
+      const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+      floor.rotation.x = -Math.PI / 2; // 旋转地板使其水平
+      floor.position.y = 0; // 设置地板的位置
+      scene.add(floor);
+      // 创建墙壁材质
+      const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xffaaaa });
+
+      // 创建前墙
+      const frontWallGeometry = new THREE.BoxGeometry(20, 25, 1);
+      const frontWall = new THREE.Mesh(frontWallGeometry, wallMaterial);
+      frontWall.position.set(0, 12.5, -10); // 位置：x=0, y=12.5, z=-5
+      frontWall.receiveShadow = true;
+      scene.add(frontWall);
+
+      // 创建后墙
+      const backWallGeometry = new THREE.BoxGeometry(20, 25, 1);
+      const backWall = new THREE.Mesh(backWallGeometry, wallMaterial);
+      backWall.position.set(0, 12.5, 10); // 位置：x=0, y=12.5, z=5
+      backWall.receiveShadow = true;
+      scene.add(backWall);
+
+      // 创建左墙
+      const leftWallGeometry = new THREE.BoxGeometry(1, 25, 20);
+      const leftWall = new THREE.Mesh(leftWallGeometry, wallMaterial);
+      leftWall.position.set(-10, 12.5, 0); // 位置：x=-5, y=12.5, z=0
+      leftWall.receiveShadow = true;
+      scene.add(leftWall);
+
+      // 创建右墙
+      const rightWallGeometry = new THREE.BoxGeometry(1, 25, 20);
+      const rightWall = new THREE.Mesh(rightWallGeometry, wallMaterial);
+      rightWall.position.set(10, 12.5, 0); // 位置：x=5, y=12.5, z=0
+      rightWall.receiveShadow = true;
+      scene.add(rightWall);
+
+      // 创建点光源
+      const pointLight = new THREE.PointLight(0xffffff, 2, 100); // 白色光，强度为1，最大距离为100
+      pointLight.position.set(0, 20, 0); // 设置光源位置
+      scene.add(pointLight);
+
+      // 创建OrbitControls
+      controls = new OrbitControls(camera, renderer.domElement);
+      //监听键盘事件
+      controls.listenToKeyEvents(window);
+      controls.enableDamping = true; // 启用阻尼效果
+      controls.dampingFactor = 0.01; // 阻尼因子
+      controls.screenSpacePanning = false;
+      controls.minDistance = 3;
+      controls.maxDistance = 10;
+      controls.maxPolarAngle = Math.PI / 2.5;
+      controls.update(); // 更新控制器
+      camera.position.set(currentY.value, currentX.value, currentZ.value); // 调整相机位置，使其远离模型
+
+
+      //原点坐标轴
+      const axesHelper = new THREE.AxesHelper(5);
+      scene.add(axesHelper);
+      // 启动动画
+      animate();
+    };
+    const animate = () => {
+      requestAnimationFrame(animate); // 确保这行没有被注释掉
+      // 可选：旋转模型
+      //   if (shibamodel) {
+      //     shibamodel.rotation.y += 0.01;
+      //   }
+      controls.update(); // 更新控制器
+      renderer.render(scene, camera);
+    };
+
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+
+    const moveCamera = (direction) => {
+      const quaternion = camera.quaternion.clone(); // 保存当前的相机方向
+      let step = 1;
+      switch (direction) {
+        case "up":
+          currentY.value -= step;
+          break;
+        case "down":
+          currentY.value += step;
+          break;
+        case "left":
+          currentX.value -= step;
+          break;
+        case "right":
+          currentX.value += step;
+          break;
+      }
+      camera.position.set(currentX.value, currentY.value, -1); // 调整相机位置，使其远离模型
+      camera.quaternion.copy(quaternion); // 恢复保存的相机方向
+    };
+
+    onMounted(() => {
+      init();
+      window.addEventListener("resize", handleResize);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener("resize", handleResize);
+      // 清理资源
+      renderer.dispose();
+    });
+
+    return {
+      canvasContainer,
+      moveCamera,
+      currentY,
+      currentX,
+      currentZ,
+    };
+  },
+};
+</script>
+
+<style>
+.ThreeScene {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+.canvas-container {
+  width: 100%;
+  height: 100%;
+}
+
+.coordinate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #fff;
+}
+.direction-controls {
+  position: absolute;
+  bottom: 10px; /* 距离底部的距离 */
+  right: 10px; /* 距离右边的距离 */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3列布局 */
+  grid-template-rows: repeat(3, 1fr); /* 3行布局 */
+  gap: 5px; /* 调整按钮之间的间距 */
+  justify-items: center;
+  align-items: center;
+}
+
+.direction-button {
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  border: none;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.direction-button:hover {
+  background-color: #d0d0d0;
+}
+
+/* 上方向 */
+.up {
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+  transform: rotate(90deg);
+}
+
+/* 下方向 */
+.down {
+  grid-row: 3 / 4;
+  grid-column: 2 / 3;
+  /* transform: rotate(180deg); */
+}
+
+/* 左方向 */
+.left {
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
+  /* transform: rotate(-90deg); */
+}
+
+/* 右方向 */
+.right {
+  grid-row: 2 / 3;
+  grid-column: 3 / 4;
+  z-index: 0 !important;
+  /* transform: rotate(90deg); */
+}
+</style>

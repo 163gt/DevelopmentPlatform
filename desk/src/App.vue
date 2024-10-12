@@ -12,4 +12,5 @@ import { RouterLink, RouterView } from 'vue-router'
 header {
   width: 100vw;
 }
+
 </style>

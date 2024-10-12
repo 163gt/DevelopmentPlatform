@@ -6,7 +6,7 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import shiba from "../assets/three3DModel/shiba/scene.gltf?url";
+// import shiba from "../assets/three3DModel/shiba/scene.gltf?url";
 
 export default {
   name: "ThreeJSComponent",

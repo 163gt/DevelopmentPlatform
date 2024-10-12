@@ -5,14 +5,15 @@
 <script>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
+import addThreeGLTFLoader from "../utils/createThreeGLTF"
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import shiba from "@/assets/shiba.glb?url";
+// import shiba from "@/assets/shiba.glb?url";
 
 export default {
   name: "ThreeJSComponent",
   setup() {
     const canvasContainer = ref(null);
-    let scene, camera, renderer, model;
+    let scene, camera, renderer, shibamodel;
 
     const init = () => {
       // 创建场景
@@ -36,21 +37,21 @@ export default {
 
       // 添加模型
       const loader = new GLTFLoader();
-      loader.load(
-        shiba,
-        function (gltf) {
-          model = gltf.scene;
-          // 设置模型的位置
-          model.position.set(0, 0, -3); // 你可以根据需要调整 x, y, z 坐标
-          // 将模型添加到场景中
-          scene.add(model);
-          console.log('Model loaded:', model); // 调试输出
-        },
-        undefined,
-        function (error) {
-          console.error('Error loading model:', error);
-        }
-      );
+      addThreeGLTFLoader(loader,shiba,scene,shibamodel)
+      // loader.load(
+      //   shiba,
+      //   function (gltf) {
+      //     model = gltf.scene;
+      //     // 设置模型的位置
+      //     model.position.set(0, 0, -3); // 你可以根据需要调整 x, y, z 坐标
+      //     // 将模型添加到场景中
+      //     scene.add(model);
+      //   },
+      //   undefined,
+      //   function (error) {
+      //     console.error('Error loading model:', error);
+      //   }
+      // );
 
       // 添加环境光
       const ambientLight = new THREE.AmbientLight(0x404040);
