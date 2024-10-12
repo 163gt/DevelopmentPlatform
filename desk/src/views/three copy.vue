@@ -1,14 +1,22 @@
 <template>
   <div class="ThreeScene">
     <div class="coordinate">
-      {{ modelPosition.x }} {{ modelPosition.y }} {{ modelPosition.z }}
+      {{ currentX }}
+      {{ currentY }}
+      {{ currentZ }}
     </div>
     <div ref="canvasContainer" class="canvas-container"></div>
     <div class="direction-controls">
-      <button class="direction-button up" @click="moveModel('up')"><</button>
-      <button class="direction-button left" @click="moveModel('left')"><</button>
-      <button class="direction-button right" @click="moveModel('right')">></button>
-      <button class="direction-button down" @click="moveModel('down')">v</button>
+      <button class="direction-button up" @click="moveCamera('up')"><</button>
+      <button class="direction-button left" @click="moveCamera('left')">
+        <
+      </button>
+      <button class="direction-button right" @click="moveCamera('right')">
+        >
+      </button>
+      <button class="direction-button down" @click="moveCamera('down')">
+        v
+      </button>
     </div>
   </div>
 </template>
@@ -28,10 +36,8 @@ export default {
     const currentX = ref(0);
     const currentY = ref(5);
     const currentZ = ref(0);
-    const modelPosition = ref({ x: 0, y: 0, z: 0 }); // 添加模型位置
-    const modelDirection  = ref({ x: 0, y: 0, z: 0 }); // 添加模型位置
     let mixer;
-    let scene, camera, renderer, controls, walkAction,model;
+    let scene, camera, renderer, controls, walkAction;
     const init = () => {
       // 创建渲染器
       renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -49,9 +55,9 @@ export default {
       );
       // 添加模型
       const loader = new GLTFLoader();
-      addThreeGLTFLoader(loader, shiba, scene, [modelPosition.value.x, modelPosition.value.y, modelPosition.value.z], (loadedModel, gltf) => {
-        model = loadedModel;
-        mixer = new THREE.AnimationMixer(loadedModel);
+      addThreeGLTFLoader(loader, shiba, scene, [0, 0, 0], (model, gltf) => {
+        // shibamodel = model;
+        mixer = new THREE.AnimationMixer(model);
         const animations = gltf.animations;
         if (animations && animations.length > 0) {
           walkAction = mixer.clipAction(animations[1]); // 假设第一个动画是行走动作
@@ -139,32 +145,25 @@ export default {
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
-    const moveModel = (direction) => {
-      let step = 0.5;
-      if (!model) {
-        console.log("Model is not loaded yet."); // 如果模型未加载，打印提示
-        return;
-      }
+    const moveCamera = (direction) => {
+      const quaternion = camera.quaternion.clone(); // 保存当前的相机方向
+      let step = 1;
       switch (direction) {
         case "up":
-          modelPosition.value.z += step; // 向上移动
-          modelDirection.value.y = Math.PI; // 面向 Z 轴
+          currentY.value -= step;
           break;
         case "down":
-          modelPosition.value.z -= step; // 向下移动
-          modelDirection.value.y = 0; // 面向 Z 轴
+          currentY.value += step;
           break;
         case "left":
-          modelPosition.value.x -= step; // 向左移动
-          modelDirection.value.y = Math.PI/2; // 面向 Z 轴
+          currentX.value -= step;
           break;
         case "right":
-          modelPosition.value.x += step; // 向右移动
-          modelDirection.value.y = -Math.PI/2; // 面向 Z 轴
+          currentX.value += step;
           break;
       }
-      model.rotation.set(modelDirection.value.x, modelDirection.value.y, modelDirection.value.z); // 更新模型旋转
-      model.position.set(modelPosition.value.x, modelPosition.value.y, modelPosition.value.z); // 更新模型位置
+      camera.position.set(currentX.value, currentY.value, -1); // 调整相机位置，使其远离模型
+      camera.quaternion.copy(quaternion); // 恢复保存的相机方向
     };
 
     onMounted(() => {
@@ -180,11 +179,10 @@ export default {
 
     return {
       canvasContainer,
-      moveModel,
+      moveCamera,
       currentY,
       currentX,
       currentZ,
-      modelPosition,
     };
   },
 };
