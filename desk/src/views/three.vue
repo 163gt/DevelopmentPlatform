@@ -17,7 +17,8 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import addThreeGLTFLoader from "../utils/createThreeGLTF";
+// import {addThreeGLTFLoader} from "@/utils/createThreeGLTF"
+
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import shiba from "@/assets/Soldier.glb?url";
 
@@ -55,7 +56,8 @@ export default {
         const animations = gltf.animations;
         if (animations && animations.length > 0) {
           walkAction = mixer.clipAction(animations[1]); // 假设第一个动画是行走动作
-          walkAction.play(); // 播放行走动画
+          // walkAction.play(); // 播放行走动画
+          walkAction.stop(); // 停止行走动画
         }
       });
       // 创建地板
@@ -123,6 +125,8 @@ export default {
       // 启动动画
       animate();
     };
+
+    
     const animate = () => {
       requestAnimationFrame(animate); // 确保这行没有被注释掉
       // 确保 mixer 被初始化
@@ -163,8 +167,12 @@ export default {
           modelDirection.value.y = -Math.PI/2; // 面向 Z 轴
           break;
       }
+      walkAction.play(); // 播放行走动画
       model.rotation.set(modelDirection.value.x, modelDirection.value.y, modelDirection.value.z); // 更新模型旋转
       model.position.set(modelPosition.value.x, modelPosition.value.y, modelPosition.value.z); // 更新模型位置
+      setTimeout(() => {
+        walkAction.stop(); // 停止行走动画
+      }, 500);
     };
 
     onMounted(() => {
