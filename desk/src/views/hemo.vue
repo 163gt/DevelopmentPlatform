@@ -22,6 +22,9 @@ export default {
     let moveBackward = false;
     let moveLeft = false;
     let moveRight = false;
+    //设置地板和网格大小
+    const floorSize = 100;
+    const halfFloorSize = floorSize / 2;
 
     const init = () => {
       // 创建渲染器
@@ -46,12 +49,17 @@ export default {
       clock = new THREE.Clock();
 
       // 添加网格助手
-      const gridHelper = new THREE.GridHelper(100, 100, 0x00ffff, 0x00ffff); // 参数分别为网格的大小和分割数量
+      const gridHelper = new THREE.GridHelper(
+        floorSize,
+        floorSize,
+        0x00ffff,
+        0x00ffff
+      ); // 参数分别为网格的大小和分割数量
       scene.add(gridHelper);
       gridHelper.position.set(0, 0, 0);
 
       // 创建地板
-      const floorGeometry = new THREE.PlaneGeometry(100, 100);
+      const floorGeometry = new THREE.PlaneGeometry(floorSize, floorSize);
       const floorMaterial = new THREE.MeshBasicMaterial({
         color: 0x808080,
         side: THREE.DoubleSide,
@@ -69,11 +77,31 @@ export default {
       direction = new THREE.Vector3();
       velocityFactor = 5;
 
-      document.addEventListener("keydown",handleKeyDown);
-      document.addEventListener("keyup",handleKeyUp);
+      //添加星空背景
+      starBackground();
 
+      document.addEventListener("keydown", handleKeyDown);
+      document.addEventListener("keyup", handleKeyUp);
       // 启动动画
       animate();
+    };
+    const starBackground = () => {
+      const vertices = [];
+      for (let i = 0; i < 10000; i++) {
+        const x = THREE.MathUtils.randFloatSpread(2000);
+        const y = THREE.MathUtils.randFloatSpread(2000);
+        const z = THREE.MathUtils.randFloatSpread(2000);
+
+        vertices.push(x, y, z);
+      }
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute(
+        "position",
+        new THREE.Float32BufferAttribute(vertices, 3)
+      );
+      const material = new THREE.PointsMaterial({ color: 0x888888 });
+      const points = new THREE.Points(geometry, material);
+      scene.add(points);
     };
     //点击锁定指针
     const lockButton = () => {
@@ -121,11 +149,8 @@ export default {
           break;
       }
     };
-
-    const animate = () => {
-      requestAnimationFrame(animate); // 确保这行没有被注释掉
-
-      //处理移动
+    //处理更新移动视角
+    const rendererMove = () => {
       if (controls.isLocked) {
         velocity.x -= velocity.x * 10.0 * 0.01;
         velocity.z -= velocity.z * 10.0 * 0.01;
@@ -135,7 +160,29 @@ export default {
         if (moveRight) velocity.x += velocityFactor * 0.01;
         controls.moveRight(velocity.x * 0.1);
         controls.moveForward(-velocity.z * 0.1);
+        // 获取当前的位置
+        const position = new THREE.Vector3();
+        controls.getObject().getWorldPosition(position);
+        // 检查并限制 x 轴边界
+        if (position.x < -halfFloorSize) {
+          position.x = -halfFloorSize;
+        } else if (position.x > halfFloorSize) {
+          position.x = halfFloorSize;
+        }
+        // 检查并限制 z 轴边界
+        if (position.z < -halfFloorSize) {
+          position.z = -halfFloorSize;
+        } else if (position.z > halfFloorSize) {
+          position.z = halfFloorSize;
+        }
+        // 将位置设置回对象
+        controls.getObject().position.set(position.x, position.y, position.z);
       }
+    };
+    const animate = () => {
+      requestAnimationFrame(animate); // 确保这行没有被注释掉
+      //处理更新移动视角
+      rendererMove();
       renderer.render(scene, camera); // 渲染场景
     };
 
@@ -145,8 +192,8 @@ export default {
 
     // 清理
     onBeforeUnmount(() => {
-      window.removeEventListener("keydown",handleKeyDown);
-      window.removeEventListener("keyup",handleKeyUp);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
       container.value.removeChild(renderer.domElement);
     });
 
