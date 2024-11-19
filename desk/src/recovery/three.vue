@@ -49,17 +49,17 @@ export default {
         1000
       );
       // 添加模型
-      const loader = new GLTFLoader();
-      addThreeGLTFLoader(loader, shiba, scene, [modelPosition.value.x, modelPosition.value.y, modelPosition.value.z], (loadedModel, gltf) => {
-        model = loadedModel;
-        mixer = new THREE.AnimationMixer(loadedModel);
-        const animations = gltf.animations;
-        if (animations && animations.length > 0) {
-          walkAction = mixer.clipAction(animations[1]); // 假设第一个动画是行走动作
-          // walkAction.play(); // 播放行走动画
-          walkAction.stop(); // 停止行走动画
-        }
-      });
+      // const loader = new GLTFLoader();
+      // addThreeGLTFLoader(loader, shiba, scene, [modelPosition.value.x, modelPosition.value.y, modelPosition.value.z], (loadedModel, gltf) => {
+      //   model = loadedModel;
+      //   mixer = new THREE.AnimationMixer(loadedModel);
+      //   const animations = gltf.animations;
+      //   if (animations && animations.length > 0) {
+      //     walkAction = mixer.clipAction(animations[1]); // 假设第一个动画是行走动作
+      //     // walkAction.play(); // 播放行走动画
+      //     walkAction.stop(); // 停止行走动画
+      //   }
+      // });
       // 创建地板
       const floorGeometry = new THREE.PlaneGeometry(20, 20);
       const floorMaterial = new THREE.MeshStandardMaterial({

@@ -9,8 +9,5 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 
 <style scoped>
-header {
-  width: 100vw;
-}
 
 </style>

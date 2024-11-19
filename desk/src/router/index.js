@@ -1,12 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Three from '../views/three.vue'
+import hemo from '@/views/hemo.vue'
+import three from '@/recovery/three.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'Three',
-      component: Three
+      name: 'home',
+      component: hemo
+    },
+    {
+      path: '/three',
+      name: 'three',
+      component: three
     },
   ]
 })
