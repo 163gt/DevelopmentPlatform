@@ -2,11 +2,9 @@
   <div class="home" ref="world">
     <button class="lockBtn" @click="lockButton">Lock Mouse</button>
     <div id="echartsHtml" class="echartselement"></div>
-    <div id="elementLock" class="element">99999999999999</div>
   </div>
 </template>
 <script>
-import './test.css'
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import * as echarts from "echarts";
@@ -43,7 +41,6 @@ export default {
       // 创建渲染器
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.domElement.style.position = "absolute";
       world.value.appendChild(renderer.domElement);
       // 创建场景
       scene = new THREE.Scene();
@@ -55,7 +52,7 @@ export default {
         0.1,
         1000
       );
-      camera.position.set(0, 3, 10);
+      camera.position.set(0, 10, 5);
 
       /** */
       const chartContainer = document.getElementById("echartsHtml");
@@ -136,19 +133,22 @@ export default {
       css3Renderer.domElement.style.top = "0";
       world.value.appendChild(css3Renderer.domElement);
 
-      const testDiv = document.getElementById('elementLock');
+      const testDiv = document.createElement("div");
+      testDiv.style.width = "50px"
+      testDiv.style.height = "50px"
+      testDiv.style.backgroundColor = "#0fe043"
+      testDiv.innerHTML = "hsadasd";
       const css3Object = new CSS3DSprite(testDiv);
       css3Object.scale.set(0.1, 0.1, 0.1);
-      css3Object.position.set(0, 1, -10);
+      css3Object.position.set(0, 1, -15);
       scene.add(css3Object);
 
-      // const testDiv = document.createElement("div");
-      // testDiv.className = "testDiv"
-      // testDiv.innerHTML = "hsadasd";
-      // const css3Object = new CSS3DSprite(testDiv);
-      // css3Object.scale.set(0.1, 0.1, 0.1);
-      // css3Object.position.set(0, 1, -15);
-      // scene.add(css3Object);
+
+
+
+
+
+
 
       // 创建地板
       const floorGeometry = new THREE.PlaneGeometry(floorSize, floorSize);
@@ -322,11 +322,4 @@ export default {
     background-color: #0fe043;
   }
 }
-.element{
-    width: 50px;
-    height: 50px;
-    color: #ffffff;
-    border: 1px solid #a1a1a1;
-    overflow: hidden;
-  }
 </style>

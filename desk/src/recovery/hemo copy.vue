@@ -2,20 +2,17 @@
   <div class="home" ref="world">
     <button class="lockBtn" @click="lockButton">Lock Mouse</button>
     <div id="echartsHtml" class="echartselement"></div>
-    <div id="elementLock" class="element">99999999999999</div>
   </div>
 </template>
 <script>
-import './test.css'
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import * as THREE from "three";
 import * as echarts from "echarts";
 import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
 import {
-  CSS3DRenderer,
-  CSS3DObject,
-  CSS3DSprite,
-} from "three/examples/jsm/renderers/CSS3DRenderer";
+  CSS2DRenderer,
+  CSS2DObject,
+} from "three/examples/jsm/renderers/CSS2DRenderer.js";
 export default {
   setup(props) {
     const world = ref(null);
@@ -27,7 +24,7 @@ export default {
       clock,
       velocity,
       direction,
-      css3Renderer,
+      cssRenderer,
       velocityFactor;
     let moveForward = false;
     let moveBackward = false;
@@ -43,7 +40,6 @@ export default {
       // 创建渲染器
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.domElement.style.position = "absolute";
       world.value.appendChild(renderer.domElement);
       // 创建场景
       scene = new THREE.Scene();
@@ -55,7 +51,7 @@ export default {
         0.1,
         1000
       );
-      camera.position.set(0, 3, 10);
+      camera.position.set(0, 2, 5);
 
       /** */
       const chartContainer = document.getElementById("echartsHtml");
@@ -114,9 +110,10 @@ export default {
         scene.add(sprite);
       });
 
+
       //指针控制器
       controls = new PointerLockControls(camera, renderer.domElement);
-      // scene.add(controls.getObject());
+      scene.add(controls.getObject());
       clock = new THREE.Clock();
 
       // 添加网格助手
@@ -128,27 +125,6 @@ export default {
       ); // 参数分别为网格的大小和分割数量
       scene.add(gridHelper);
       gridHelper.position.set(0, 0, 0);
-
-      //添加3d渲染器
-      css3Renderer = new CSS3DRenderer();
-      css3Renderer.setSize(window.innerWidth, window.innerHeight);
-      css3Renderer.domElement.style.position = "absolute";
-      css3Renderer.domElement.style.top = "0";
-      world.value.appendChild(css3Renderer.domElement);
-
-      const testDiv = document.getElementById('elementLock');
-      const css3Object = new CSS3DSprite(testDiv);
-      css3Object.scale.set(0.1, 0.1, 0.1);
-      css3Object.position.set(0, 1, -10);
-      scene.add(css3Object);
-
-      // const testDiv = document.createElement("div");
-      // testDiv.className = "testDiv"
-      // testDiv.innerHTML = "hsadasd";
-      // const css3Object = new CSS3DSprite(testDiv);
-      // css3Object.scale.set(0.1, 0.1, 0.1);
-      // css3Object.position.set(0, 1, -15);
-      // scene.add(css3Object);
 
       // 创建地板
       const floorGeometry = new THREE.PlaneGeometry(floorSize, floorSize);
@@ -255,7 +231,7 @@ export default {
         controls.moveForward(-velocity.z * 0.1);
         // 获取当前的位置
         const position = new THREE.Vector3();
-        // controls.getObject().getWorldPosition(position);
+        controls.getObject().getWorldPosition(position);
         // 检查并限制 x 轴边界
         if (position.x < -halfFloorSize) {
           position.x = -halfFloorSize;
@@ -269,7 +245,7 @@ export default {
           position.z = halfFloorSize;
         }
         // 将位置设置回对象
-        // controls.getObject().position.set(position.x, position.y, position.z);
+        controls.getObject().position.set(position.x, position.y, position.z);
       }
     };
     const animate = () => {
@@ -277,8 +253,6 @@ export default {
       //处理更新移动视角
       rendererMove();
       renderer.render(scene, camera); // 渲染场景
-      css3Renderer.render(scene, camera);
-
     };
 
     onMounted(() => {
@@ -311,22 +285,12 @@ export default {
     top: 0;
     left: 45%;
     background-color: #a1a1a1;
-    z-index: 99;
   }
   .echartselement {
-    width: 200px;
-    height: 200px;
-    color: #0fe043;
-    border: 1px solid #0fe043;
-    display: none;
-    background-color: #0fe043;
-  }
+      width: 200px;
+      height: 200px;
+      border: 1px solid #0fe043;
+      display: none;
+    }
 }
-.element{
-    width: 50px;
-    height: 50px;
-    color: #ffffff;
-    border: 1px solid #a1a1a1;
-    overflow: hidden;
-  }
 </style>
