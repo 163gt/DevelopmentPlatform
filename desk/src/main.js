@@ -1,5 +1,6 @@
 //留做主题色
-import './assets/main.css'
+import './assets/style/main.css'
+import './assets/style/index.scss'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

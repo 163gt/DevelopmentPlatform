@@ -1,0 +1,16 @@
+$--WindowHeaderHeight:55px;
+
+.WindowHeader{
+    width: 100%;
+    height: $--WindowHeaderHeight;
+    /* position: fixed;
+    top: 0; */
+    background-color: black;
+    display: flex;
+    align-items: center;
+  }
+  .netImage{
+    width: 100%;
+    height: calc(100vh - $--WindowHeaderHeight);
+    display: flex;
+  }
