@@ -12,8 +12,6 @@
     "desk": "file:",
     "echarts": "^5.5.1",
     "pinia": "^2.1.7",
-    "three": "^0.170.0",
-    "three-orbitcontrols": "^2.110.3",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"
   },

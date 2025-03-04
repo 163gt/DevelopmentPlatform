@@ -1,9 +1,7 @@
-import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
+import path from 'path';
 import vue from '@vitejs/plugin-vue'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   server: {
     host: '0.0.0.0', // 监听所有网络接口
@@ -16,7 +14,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': path.resolve(__dirname, 'src')
     }
   },
 })
