@@ -1,7 +1,7 @@
 <template>
     <div class="net">
-        <twoImageVue />
         <oneImageVue />
+        <twoImageVue style="z-index:10" />
     </div>
 </template>
 <script>
@@ -23,6 +23,7 @@ export default {
 <style lang="scss" scoped>
 .net{
     width: 100%;
-    background-color: rgb(74, 74, 74);
+    background: linear-gradient(to bottom, #9478ff, #0D1117 100%);
+    color: #fff;
 }
 </style>
