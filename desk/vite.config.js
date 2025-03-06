@@ -7,7 +7,6 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 const INVALID_CHAR_REGEX = /[\u0000-\u001F"#$&*+,:;<=>?[\]^`{|}\u007F]/g
 const DRIVE_LETTER_REGEX = /^[a-z]:/i
 
-
 export default defineConfig({
   base: '/DevelopmentPlatform/',//用于github仓库静态站点部署
   // base: './',                   //设置静态资源访问路径在当前目录下
