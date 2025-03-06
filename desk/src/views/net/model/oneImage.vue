@@ -13,6 +13,7 @@
 <script setup>
 import { ref, onMounted, nextTick, watch, onUnmounted } from "vue";
 import { imageIntersectionObserver, debounce } from "@/utils/tool";
+import oneImage from "@/assets/images/oneImage.webp"
 //图片地址
 const address = ref("");
 //图片ref
@@ -42,7 +43,7 @@ onMounted(() => {
     imageIntersectionObserver(
       imageRef.value,
       address,
-      "src/assets/image/oneImage.webp"
+      oneImage
     );
     //添加滚动监听
     window.addEventListener("scroll", handleScroll);

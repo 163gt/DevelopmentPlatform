@@ -28,7 +28,8 @@
 <script setup>
 import { ref } from "vue";
 import netHoverPopoverVue from "../components/netHoverPopover.vue";
-const headerImage = ref("src/assets/image/header.jpg");
+import header from "@/assets/images/header.jpg"
+const headerImage = ref(header);
 </script>
 <style lang="scss" scoped>
 .headerImage {

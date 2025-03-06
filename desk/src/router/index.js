@@ -5,11 +5,12 @@ const Router = createRouter({
   routes: [
     {
       path: '',
-      name: 'header',
+      name: 'index',
       component: ()=> import('@/views/index.vue'),
+      redirect: '/index',
       children:[
         {
-          path:'',
+          path:'index',
           name:'netConsist',
           component: ()=> import('@/views/net/index.vue'),
         }
