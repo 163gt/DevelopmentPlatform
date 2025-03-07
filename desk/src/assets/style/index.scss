@@ -26,6 +26,6 @@ $--WindowHeaderHeight:55px;
   }
   .netImage{
     width: 100%;
-    height: calc(100vh - $--WindowHeaderHeight);
+    height: calc((100vw - $--WindowHeaderHeight) / 16 * 9);
     display: flex;
   }
