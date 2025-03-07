@@ -1,6 +1,6 @@
 $--WindowHeaderHeight:55px;
 
-.WindowHeader{
+.WindowHeader_convention{
     width: 100%;
     height: $--WindowHeaderHeight;
     /* position: fixed;
@@ -8,6 +8,21 @@ $--WindowHeaderHeight:55px;
     background-color: #9478ff;
     display: flex;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  .WindowHeader_black{
+    width: 100%;
+    height: $--WindowHeaderHeight;
+    /* position: fixed;
+    top: 0; */
+    background-color: #1a222e;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
   .netImage{
     width: 100%;

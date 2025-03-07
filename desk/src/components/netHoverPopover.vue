@@ -1,13 +1,29 @@
 <template>
   <div class="netHoverPopover">
-    构建构建构建构建构建构建构建构建构建构建
+    <div
+      class="netHoverPopover_box"
+      v-for="(item, index) in labelList"
+      :key="index"
+    >
+      <span class="netHoverPopover_label">{{ item.label }}</span>
+    </div>
   </div>
 </template>
 
-<script setup></script>
-
+<script setup>
+defineProps({
+  labelList: { type: Array, default: [] },
+});
+</script>
 <style lang="scss" scoped>
 .netHoverPopover {
-    width: 100%;
+  width: 100%;
+  .netHoverPopover_box {
+    margin-bottom: 10px;
+    .netHoverPopover_label {
+      cursor: pointer;
+      font-weight: bold;
+    }
+  }
 }
 </style>

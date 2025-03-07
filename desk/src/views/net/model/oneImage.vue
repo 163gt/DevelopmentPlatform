@@ -7,13 +7,15 @@
         :src="address"
       />
     </div>
-    <div class="oneImage_right">构建构建构建构建构建构建构建构建构建构建</div>
+    <div class="oneImage_right">编辑您的专属个人信息</div>
   </div>
 </template>
 <script setup>
 import { ref, onMounted, nextTick, watch, onUnmounted } from "vue";
 import { imageIntersectionObserver, debounce } from "@/utils/tool";
 import oneImage from "@/assets/images/oneImage.webp"
+import {useCounterStore,overallStyle} from "@/stores/index"
+
 //图片地址
 const address = ref("");
 //图片ref
@@ -22,6 +24,9 @@ const imageRef = ref(null);
 const imageRefBox = ref(null);
 //防抖函数使用
 // const debounceScroll = debounce(handleScroll, 0);
+
+const store = useCounterStore()
+store.increment();
 
 function handleScroll() {
   const scrollY = window.scrollY; //获取滚动数值
@@ -71,6 +76,8 @@ onUnmounted(() => {
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   font-size: 2rem;
 }
 
